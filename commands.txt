@@ -1,0 +1,19 @@
+print
+bfs
+Alicia Keys
+Ariana Grande
+bfs
+Bon Iver
+Chance the Rapper
+not
+Justin Bieber
+Kanye West
+Rihanna
+*
+dfs
+Migos
+Pharrell Williams
+bfs
+Playboi Carti
+Young Thug
+quit

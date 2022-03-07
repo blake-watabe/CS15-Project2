@@ -1,0 +1,218 @@
+/*******************************************************************************
+* Project 2: Six Degrees
+* Comp 15 Spring 2021
+* README
+* Author: Blake Watabe
+*
+*******************************************************************************/
+
+Program Purpose:
+---------------
+
+    The purpose of the program is to create a graph of artists and their
+    discography, where users can find connections between artists based on who
+    they have collaborated with.
+
+Compile/run:
+-----------
+    SixDegrees is the name of the executable.
+    To compile: "make SixDegrees"
+    To run: "./SixDegrees test_file.txt [commands_file.txt] [outputfile.txt]"
+    
+    Can also run "unit_test" to compile for the CollabGraph and SixDegrees
+
+
+Acknowledgments:
+---------------
+
+    TA Amy, I'm grateful for the amount of time she spent with me on my
+    design check off and the incredibly helpful tips she gave. I Also would
+    like to thank TA Ellis for his creative solutions to help guide me through
+    problems. Lastly, I'd like to thank TA Niall and Amy (again) for spending
+    a lot of time helping me on my DFS.
+
+Files:
+-----
+
+SixDegrees.cpp: implementation of the run function, which encapsulates all of
+    the operators and functions required for the program.
+
+SixDegrees.h: interface for the SixDegrees class, holds an instance of a
+    CollabGraph.
+
+main.cpp: implementation of how to run the program.
+
+CollabGraph.cpp: implementation of the CollabGraph class, and all the operators
+    used to populate the vertices and edges
+
+CollabGraph.h: the interface for the functions and operators listed above
+
+Artist.h: Interface for a Class that stores the name of an artist and all of
+    their songs
+
+Artist.cpp: Implementation of the Artist Class. It has a variety of
+    modification and accessing functions, such as functions to push elements
+    onto the stack, pop elements off the stack, access the top of the stack,
+    and clear the stack.
+
+unit_tests.h: A unit testing file for the SixDegrees and CollabGraph classes. 
+    Runs in conjunction with the unit_test framework to allow for testing of 
+    individual functions.
+
+test_artist.txt: The main text file I used for testing. It was modeled after
+    artists.txt and it contains four artists, some with collaborations.
+    
+test_commands.txt: A simple text file containing the print and quit commands.
+    I used it to make sure the function ran with a second command line arg.
+    
+commands.txt: A commands file for use with the artists.txt file.
+
+false_artists.txt: A fake testing file to test if an artist without * would
+    affect the program
+
+
+Data Structures:
+---------------
+
+    This main data structure of this assignment is a graph, which is a network
+    of nodes called vertices that are connected by edges. Compared to a tree
+    or a linked list, graphs do not have a defined origin node. This means
+    that traversal can start from any given vertex (provided it has edges).
+    This means that finding a path from one vertex to another can be done
+    in the shortest number of steps. However, in graphs, one must be careful
+    of cycles; improper implementation of the traversal functions can lead to
+    paths that take infinite loops. 
+    
+    Another Data structure used is the array list, which I implemented using
+    vectors. Vectors were very useful for accessing elements of an index in
+    constant time, and for easily adding to elements to the back.
+    
+    Another Data structure used is a stack, which pushes and pops elements in
+    a First In Last Out order. Stacks were used for DFS, to help traverse to
+    the end of the graph and deal with the neighbors before dealing with the
+    node itself.
+    
+    Lastly, queues were used for the BFS, as it was important to enqueue
+    the source and deal with it before dealing with the neighbors of that
+    node. Queues push and pop elements in a First in, First out order.
+
+Testing:
+-------
+
+    I tested my 3 CollabGraph functions in a unit testing file to make sure the
+    standard operations worked, as well as edge cases. I started with the
+    populate_graph function, and made sure that I could insert multiple 
+    artists, some with collaborations, into a vector and feed that vector as an
+    argument to the function. Initially I had some trouble, but I used cerr
+    statments and found that the problem was with the indexing for the
+    collab_graph function. I tested different scenarios, such as 3 artists
+    collaborating on one song, 2 sets of artists with collaborations,
+    and different numbers of artists.
+    
+    For report path, I used the same procedure as above in unit testing to
+    create a graph, but I also had to set the predecessors of the artists
+    manually. It took me a while to realize that my function wasn't working
+    because I was setting the order of the predecessors backwards, since in the
+    function arguments it takes to "to" before the "from". I also had to play
+    around quite a bit with the order of the if/else statements. I made sure to
+    use the enforce_valid_vertex as specified in the spec.
+    
+    For get vertex neighbors, luckily this didn't take too long since I had a
+    good idea of how to do it from the design checkoff, but most of the errors
+    were with dereferencing when trying to access different variables. I unit
+    tested the function in a way very similar to the other functions, and I
+    changed the same test multiple times by changing the artist I used in the
+    argument. 
+    
+    Once I wrote a function in SixDegrees to read in files, I then tested it 
+    in unit_test as well with the two artist text files. I found that this
+    function took a long time to fix, and I had to play around with cerr
+    statements to find which lines in the text file were actually being stored
+    into the vector. I then found out that I needed one more getline() function
+    to initially read in the first song before I check if it is an *.
+    
+    Some edge cases I tested were trying to insert an artist with undefined
+    names or songs. I also tested for trying to report a path to an artist
+    without any collaborations, or an artist not in the graph.
+    
+    I compared the output of my SixDegrees to that of the reference, and made
+    sure that the output of all the error messages matched. I used both my
+    own text file as well as the provided text file, and I tested commands
+    both via cin and a command file I created. I then diffed the results of
+    2 different output files.
+    
+    Phase 2:
+    I started by writing the BFS command, which took a considerable amount of
+    time to debug and realize where I needed to implement the edge cases.
+    Edge case testing was mostly done in terminal and was later done using my
+    phase2_commands.txt file. I tested cases such as entering the same artist
+    twice on the command line, entering one or two artists not in the graph,
+    and entering an artist with no collaborations. One thing I also realized
+    was that I had to send a lot of the "errors" to the output stream instead
+    of using cerr.
+    
+    Similar tests were conducted with the DFS command. I realized in this stage
+    that my report path had some flaws, namely it was throwing an error when a
+    path did not exist, and so I had to use a lot of cerr statements and a bit
+    of unit testing to find out where the problem was within the function. I
+    later realized though that my DFS and BFS performed very similarly. I
+    worked with TA's Niall and Amy for quite a while, and they said that since
+    I implemented my DFS iteratively, unless I was able to manually set the
+    predecessor more than once in one function call (which I can't because
+    of the spec), I couldn't really get the DFS traversal to behave. However,
+    they told me that as long as the path returned was a valid path, it should
+    be acceptable according to the spec.
+    
+    For the not function, I tested it using the testing files I created, as
+    well as using terminal commands. I tested cases where there would be no
+    path, where I include the same artist multiple times in the exclude
+    section, and other edge cases. 
+    
+    Lastly, I diffed my results using the reference, and I used both the
+    provided artists.txt file and also my own from phase1, which I expanded
+    a bit. I also used the phase2_commands.txt file to run various cases and
+    test all of my commands.
+    
+    
+Questions:
+-------
+    1. What is the difference between BFS and DFS? What are their
+    pros/cons?
+    The difference between BFS and DFS is that BFS finds the shortest path
+    from one vertex to another by using a queue to search all of the neighbors
+    first, whereas DFS uses a stack and considers all of the children before
+    looking at the neighbors. The time complexity of both is O(V + E), where
+    v is the number of vertice and e is the number of edges (or v^2 in an
+    adjacency matrix). This also assumes constant time access to a vertex's
+    neighbors. The advantages of BFS are that it finds the shortest path. For
+    DFS, since it goes as deep into the graph before back tracking, it is
+    useful for when the path is deep in the graph.
+    
+    
+    2. How did you choose to tackle the incl (if implemented) and
+    not commands? How do they compare to the BFS and DFS
+    algorithms?
+    The not command is very similar to BFS, the main difference is that you
+    exclude certain vertices by setting them as marked prior to performing a
+    traversal. Thus, in the step in BFS where you look at the whether a
+    neighbor has been visited yet, it will skip that neighbor since it fails
+    the condition of being unvisited, and thus will not be traversed.
+     
+    3. State what you think your runtime is for each of the commands
+    (excluding quit) commands and why.
+    The print function checks every vertex, and for each vertex it compares
+    it to all of the neighbors. Thus, its runtime would be O(v^2).
+    The runtime for dfs and bfs are both O(V + E) assuming that we have
+    constant time access to the list of neighbors for each node. This is
+    because in the worst case we are visiting each vertex and edge exactly
+    once. The runtime for "not" is also O(V + E) minus the vertices that we
+    exclude, since even in the worst case we will never visit the excluded
+    vertices.
+    
+
+Most Difficult Part: The most difficult part was a lot of the debugging, mostly
+revolving around the report path function and the function to read in files.
+    
+Time Spent Phase 1: Perhaps 10 hours
+Time Spent Phase 2: 15 hours
+Total: 25 hours
